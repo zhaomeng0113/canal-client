@@ -74,7 +74,7 @@ public abstract class AbstractCanalClient implements CanalClient {
                 connector.subscribe(filter);
                 while (flag) {
                     Message message = connector.getWithoutAck(batchSize, timeout, unit);
-                    log.info("获取消息 {}", message);
+//                    log.info("获取消息 {}", message);
                     long batchId = message.getId();
                     if (message.getId() != -1 && message.getEntries().size() != 0) {
                         messageHandler.handleMessage(message);
