@@ -2,6 +2,9 @@ package top.javatool.canal.client.handler;
 
 import com.alibaba.otter.canal.protocol.CanalEntry;
 import com.alibaba.otter.canal.protocol.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import top.javatool.canal.client.client.AbstractCanalClient;
 import top.javatool.canal.client.context.CanalContext;
 import top.javatool.canal.client.model.CanalModel;
 import top.javatool.canal.client.util.HandlerUtil;
@@ -15,7 +18,7 @@ import java.util.Map;
  * @date 2019/3/2921:38
  */
 public abstract class AbstractMessageHandler implements MessageHandler<Message> {
-
+    private Logger log = LoggerFactory.getLogger(AbstractMessageHandler.class);
 
 
     private Map<String, EntryHandler> tableHandlerMap;
@@ -45,6 +48,7 @@ public abstract class AbstractMessageHandler implements MessageHandler<Message> 
                         List<CanalEntry.RowData> rowDataList = rowChange.getRowDatasList();
                         CanalEntry.EventType eventType = rowChange.getEventType();
                         for (CanalEntry.RowData rowData : rowDataList) {
+                            log.debug("start handlerRowData rowData: {}, eventType: {}",rowData,eventType);
                             rowDataHandler.handlerRowData(rowData,entryHandler,eventType);
                         }
                     }
