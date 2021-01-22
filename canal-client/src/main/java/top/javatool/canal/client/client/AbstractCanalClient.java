@@ -90,14 +90,15 @@ public abstract class AbstractCanalClient implements CanalClient {
       try {
         connector.connect();
         connector.subscribe(filter);
+        connector.rollback();
         while (flag) {
           Message message = connector.getWithoutAck(batchSize, timeout, unit);
-//                    log.info("获取消息 {}", message);
           long batchId = message.getId();
+          //提前ACK
+          connector.ack(batchId);
           if (message.getId() != -1 && message.getEntries().size() != 0) {
             messageHandler.handleMessage(message);
           }
-          connector.ack(batchId);
         }
       } catch (Exception e) {
         log.error("canal client 异常", e);
