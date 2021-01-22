@@ -5,7 +5,7 @@
     <parent>
         <artifactId>canal</artifactId>
         <groupId>top.javatool</groupId>
-        <version>1.2.3-SNAPSHOT</version>
+        <version>1.2.4-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,6 +16,11 @@
 
 
     <dependencies>
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.5.0</version>
+        </dependency>
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.1-api</artifactId>
