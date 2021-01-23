@@ -45,7 +45,7 @@ public class SimpleClientAutoConfiguration {
 
     @Bean
     @ConditionalOnProperty(value = CanalProperties.CANAL_ASYNC, havingValue = "true", matchIfMissing = true)
-    public MessageHandler messageHandler(RowDataHandler<CanalEntry.RowData> rowDataHandler, List<EntryHandler> entryHandlers,
+    public MessageHandler asyncMessageHandler(RowDataHandler<CanalEntry.RowData> rowDataHandler, List<EntryHandler> entryHandlers,
                                          ExecutorService executorService) {
         return new AsyncMessageHandlerImpl(entryHandlers, rowDataHandler, executorService);
     }
