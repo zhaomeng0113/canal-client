@@ -2,7 +2,6 @@ package top.javatool.canal.client.client;
 
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.protocol.Message;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang.StringUtils;
 import org.redisson.api.RBucket;
@@ -11,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import top.javatool.canal.client.handler.MessageHandler;
+import top.javatool.canal.client.util.IpUtil;
 
 /**
  * @author yang peng
@@ -51,7 +51,7 @@ public abstract class AbstractCanalClient implements CanalClient {
   @Autowired
   RedissonClient redissonClient;
 
-  private static final String CURRENT_APP_ID = UUID.randomUUID().toString();
+  private static final String CURRENT_APP_ID = IpUtil.getLinuxLocalIp().replaceAll(".", "-");
 
   @Override
   public void start() {
