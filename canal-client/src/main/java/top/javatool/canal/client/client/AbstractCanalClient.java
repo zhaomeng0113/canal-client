@@ -52,25 +52,16 @@ public abstract class AbstractCanalClient implements CanalClient {
   RedissonClient redissonClient;
 
   private static final String CURRENT_APP_ID = UUID.randomUUID().toString();
-  RBucket<String> bucket;
 
   @Override
   public void start() {
     log.info("start canal client");
-    for (; ; ) {
-      bucket = redissonClient.getBucket(LOCK_NAME);
-      if (bucket.isExists() && !bucket.get().equals(CURRENT_APP_ID)) {
-        log.info("\n\n\n\ncanal client is runing anohter app now\n\n\n\n");
-        try {
-          Thread.sleep(60 * 1000 * 10);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-      } else {
-        bucket.set(CURRENT_APP_ID, 50 * 10, TimeUnit.SECONDS);
-        break;
-      }
+    RBucket<String> bucket = redissonClient.getBucket(LOCK_NAME);
+    if (bucket.isExists() && !bucket.get().equals(CURRENT_APP_ID)) {
+      log.info("\n\n\n\ncanal client is runing anohter app now\n\n\n\n");
+      return;
     }
+    bucket.set(CURRENT_APP_ID, 50 * 10, TimeUnit.SECONDS);
     workThread = new Thread(this::process);
     workThread.setName("canal-client-thread");
     flag = true;
@@ -98,7 +89,6 @@ public abstract class AbstractCanalClient implements CanalClient {
     while (flag) {
       try {
         //续期
-        bucket.set(CURRENT_APP_ID, 50 * 10, TimeUnit.SECONDS);
         connector.connect();
         connector.subscribe(filter);
         connector.rollback();
