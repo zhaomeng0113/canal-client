@@ -37,7 +37,7 @@ public abstract class AbstractCanalClient implements CanalClient {
   private static final String LOCK_NAME = "spark:api:canal:start";
 
 
-  protected Integer batchSize = 1;
+  protected Integer batchSize = 100;
 
 
   protected Long timeout = 1L;
@@ -105,10 +105,17 @@ public abstract class AbstractCanalClient implements CanalClient {
         while (flag) {
           Message message = connector.getWithoutAck(batchSize, timeout, unit);
           long batchId = message.getId();
-          //提前ACK
-          connector.ack(batchId);
-          if (message.getId() != -1 && message.getEntries().size() != 0) {
-            messageHandler.handleMessage(message);
+          try {
+            if (batchId != -1) {
+              log.debug("scheduled_batchId=" + batchId);
+            }
+            //提前ACK
+            connector.ack(batchId);
+            if (message.getId() != -1 && message.getEntries().size() != 0) {
+              messageHandler.handleMessage(message);
+            }
+          } catch (Exception e) {
+            log.error("canal client 异常", e);
           }
         }
       } catch (Exception e) {
