@@ -51,7 +51,7 @@ public abstract class AbstractCanalClient implements CanalClient {
   @Autowired
   RedissonClient redissonClient;
 
-  private static final String CURRENT_APP_ID = IpUtil.getLinuxLocalIp().replaceAll(".", "-");
+  private static final String CURRENT_APP_ID = IpUtil.getLinuxLocalIp().replaceAll("\\.", "-");
 
   @Override
   public void start() {
